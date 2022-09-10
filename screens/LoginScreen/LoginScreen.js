@@ -2,16 +2,27 @@ import React, { useState } from "react";
 import { TextInput, Button } from "native-base";
 
 import { authentication } from "../../Firebase/Firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 
-export default function Register() {
+export default function LoginScreen() {
+  const [isSignedIn, setIsSignedIn] = useStates(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const Register = () => {
-    createUserWithEmailAndPassword(authentication, email, password)
+  const Login = () => {
+    signInWithEmailAndPassword(authentication, email, password)
       .then((res) => {
-        console.log(res);
+        setIsSignedIn(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const Logout = () => {
+    signOut(authentication)
+      .then((res) => {
+        setIsSignedIn(false);
       })
       .catch((err) => {
         console.log(err);
@@ -30,7 +41,11 @@ export default function Register() {
         onChangeText={(text) => setPassword(text)}
         secureTextEntry={true}
       />
-      <Button title="register" onClick={Register}></Button>
+      {isSignedIn === true ? (
+        <Button title="logout" onPress={Logout}></Button>
+      ) : (
+        <Button title="login" onPress={Login}></Button>
+      )}
     </View>
   );
 }
