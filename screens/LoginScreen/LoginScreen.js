@@ -17,18 +17,26 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const Login = () => {
-    console.log("here");
-    signInWithEmailAndPassword(authentication, email, password)
-      .then((res) => {
-        setIsSignedIn(true);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const Logout = () => {
+const Login = async () => {
+  fire
+    .auth()
+    .signInWithEmailAndPassword(email, password)
+    .then((result) => {
+      return firestore
+        .collection("users")
+        .doc(result.uid)
+        .get()
+        .then((res) => {
+          console.log(res);
+          res.data();
+          console.log(res.data());
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+  const Logout = async () => {
     signOut(authentication)
       .then((res) => {
         setIsSignedIn(false);
